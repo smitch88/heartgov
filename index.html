@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Welcome to the 3> Sandbox</title>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
+<link rel='stylesheet' type ='text/css' href='main.css'>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type='text/javascript' src='/socket.io/socket.io.js'></script>
+<script type='text/javascript' src='/main.js'></script>
+</head>
+<body>
+	<div id='imgholder'>
+		<img id='logo' src="/logo.png"/>
+	</div>
+
+	<div class='responsebox'>
+	<div class='textboxHeader'>Respond to Texts</div>
+	Phone Number: <input id='respondToTexts'/><br>
+	<textarea></textarea>
+	<div id='submitResponse'>Send Response</div>
+	</div>
+
+	<div class='searchbox'>
+	<div class='textboxHeader'><div id='searchSubmit'>Search</div><input id='search'/></div>
+	<div class='textboxHeader'>
+		<div class='button' id='all'>All</div>
+		<div class='button'>Date</div>
+		<div class='button'>From</div>
+		<div class='button'>Responder</div>
+		<div class='button'>Subject</div>
+	</div>
+	<div class='textwindow'></div>
+	</div>
+
+		<div id='main'> Heart Gov Testing</div>
+	<form id='addUser' method='post' action='/message'>
+		<input type='textbox' name='Body'/>Body<br/>
+		<input type='textbox' name='To'/>To<br/>
+		<input type='textbox' name='From'/>From<br/>
+		<input type='submit' id='submit'/>
+	</form>	
+</body>
