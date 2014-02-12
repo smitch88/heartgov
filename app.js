@@ -33,6 +33,7 @@ var smsSchema = mongoose.Schema({
   To: Number,
   Body: String,
   Response: String,
+  Responder: String,
   Searchable: Array,
   date: {type: Date, default: Date.now}
 });
@@ -63,6 +64,7 @@ app.post('/message', function(request, response) {
     var from = request.body.From;
     var to = request.body.To;
     var userResponse = 'Thank you for contacting <3 Gov! Let me know what subject (1 - sanitation 2 - public works 3 - education 4 - housing) and then your idea.';
+    var responder = 'Automated Response';
 
     //checking to see if text has been recieved
 
@@ -107,6 +109,7 @@ app.post('/message', function(request, response) {
       To: to,
       Body: body,
       Response: userResponse,
+      Responder: responder,
       //This item will be used to search the database for keywords
       Searchable: body.split(' ')
     });
@@ -126,7 +129,7 @@ app.post('/message', function(request, response) {
 
     //reply to the incoming message
 
-    client.sms.messages.create({to: from, from: to, body: userResponse}, function(err,response) {
+    client.sms.messages.create({to: from, from: responder, body: userResponse}, function(err,response) {
 
    		console.log('Message Delivered');
 
@@ -163,10 +166,36 @@ io.sockets.on('connection', function(socket){
   socket.on('filterTexts', function(filterType) {
 
     if (filterType === 'all') {
+      //returns all texts in DB
       SMS.find({}, function(err, matchingResponses) {
         socket.emit('returnFilter', matchingResponses);
       });
     }
+
+    if (filterType === 'date') {
+      //returns the oldest texts first
+      var query = SMS.find().sort({'date': -1});
+      query.exec( function(err, matchingResponses) {
+        socket.emit('returnFilter', matchingResponses);
+      });
+    }
+
+    if (filterType === 'from') {
+       //returns the texts sorted by phone number
+      var query = SMS.find().sort({'From': -1});
+      query.exec( function(err, matchingResponses) {
+        socket.emit('returnFilter', matchingResponses);
+      });
+    }
+
+    if (filterType === 'responder') {
+      //
+      var query = SMS.find().sort({'Responder': -1});
+      query.exec( function(err, matchingResponses) {
+        socket.emit('returnFilter', matchingResponses);
+      });
+    }
+
   });
 
 })

@@ -44,12 +44,13 @@ function showAllTexts(texts) {
 		var content = texts[i].Body,
 			from = texts[i].From,
 			response = texts[i].Response,
+			responder = texts[i].Responder,
 			id = texts[i]._id,
 			date = texts[i].date,
 			newDiv = '<div class="textbox" id=' + from +
 					 '>Text from: ' + from + '<br>' + 
 					 'Date Recieved: ' + date + '<br>' + 
-					 'Responder: ' + 'TBD' +'<br>' +
+					 'Responder: ' + responder +'<br>' +
 					 'Response Sent: ' + response + '<br>' + 
 					 'Database ID: ' + id +'<br>' + 
 					 'Text Content: ' + content +'<br>' +
