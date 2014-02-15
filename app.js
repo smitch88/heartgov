@@ -2,7 +2,9 @@ var express = require('express'),
     app = express(),
     server = require('http').createServer(app),
     mongoose = require('mongoose'),
-    io = require('socket.io').listen(server);
+    io = require('socket.io').listen(server),
+    database = require('./config/database'),
+    SMS = require('./config/models');
 
 var accountSID = 'ACb6256885fda21fad22469b31bed4914a',
     authToken = 'c8ac0e2aded06f3018d99b2ea0ccac28';
@@ -22,24 +24,8 @@ var referenceNumberStart = 2000;
 // all environments
 app.set('port', process.env.PORT || 3000);
 
-//connecting to mongoDB
-mongoose.connect(process.env.MONGOHQ_URL || 'mongodb://localhost/heartgov', function(err) {
-  if(err) { console.log(err) }
-});
-
-//scheme for saving data to DB
-var smsSchema = mongoose.Schema({
-  From: Number,
-  To: Number,
-  Body: String,
-  Response: String,
-  Responder: String,
-  Searchable: Array,
-  date: {type: Date, default: Date.now}
-});
-
-//var for saving data
-var SMS = mongoose.model('SMS', smsSchema);
+//connecting to mongoDB --config/database holds DB info
+mongoose.connect(database.url);
 
 //static files located in the root folder
 app.use(express.static(__dirname + '/'))
@@ -50,11 +36,8 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-//main page
-app.get('/', function(req, res){
-	res.render('index.html');
-
-});
+//routes located in routes/routes.js
+require('./routes/routes.js')(app);
 
 app.post('/message', function(request, response) {
 
