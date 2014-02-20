@@ -29,6 +29,8 @@ $(window).ready(function() {
 		var reciever = $('#respondToTexts').val(),
 			message = $('#responseText').val();
 
+			console.log(reciever)
+
 		socket.emit('responderSendText', {'from': 'Asher', 'reciever': reciever, 'message': message})
 	})
 
@@ -41,7 +43,6 @@ $(window).ready(function() {
 
 	socket.on('successfulResponse', function(err) {
 		alert('Response Sent!')
-		console.log(err)
 	})
 
 	//returning all texts when a user logs on
