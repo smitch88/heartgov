@@ -140,15 +140,13 @@ io.sockets.on('connection', function(socket){
   //for responding to texts from the public site
   socket.on('responderSendText', function(messageData) {
 
-      client.sms.messages.create({
-
-        to: messageData.reciever, 
+      client.sms.messages.create({ to: messageData.reciever, 
         from: messageData.from, 
         body: messageData.message
         }, function(err,response) {
 
-      socket.emit('successfulResponse');
-      console.log('Responder Message Delivered');
+      socket.emit('successfulResponse', err);
+      console.log(err);
     });   
   })
 

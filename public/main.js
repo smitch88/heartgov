@@ -39,8 +39,9 @@ $(window).ready(function() {
 	//socket listeners
 	//=========================================================================
 
-	socket.on('successfulResponse', function() {
+	socket.on('successfulResponse', function(err) {
 		alert('Response Sent!')
+		console.log(err)
 	})
 
 	//returning all texts when a user logs on
