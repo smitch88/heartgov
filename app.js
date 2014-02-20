@@ -49,6 +49,8 @@ app.post('/message', function(request, response) {
     var userResponse = 'Thank you for contacting <3 Gov! Let me know what subject (1 - sanitation 2 - public works 3 - education 4 - housing) and then your idea.';
     var responder = 'Automated Response';
 
+    console.log(from)
+
     //checking to see if text has been recieved
 
     var newNumber = checkNumber(phoneNumbers.indexOf(from));
@@ -142,7 +144,7 @@ io.sockets.on('connection', function(socket){
 
       client.sms.messages.create({ 
         to: messageData.reciever, 
-        from: messageData.from, 
+        from: 7185146113, //our twilio number
         body: messageData.message
         }, function(err,response) {
 
