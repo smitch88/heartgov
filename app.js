@@ -28,7 +28,7 @@ app.set('port', process.env.PORT || 3000);
 mongoose.connect(database.url);
 
 //static files located in the root folder
-app.use(express.static(__dirname + '/'))
+app.use(express.static(__dirname + '/public'))
 app.use(express.bodyParser());
 
 // development only
@@ -137,6 +137,21 @@ io.sockets.on('connection', function(socket){
     io.sockets.emit('returnAllTexts', allTexts);
   })
 
+  //for responding to texts from the public site
+  socket.on('responderSendText', function(messageData) {
+
+      client.sms.messages.create({
+
+        to: messageData.reciever, 
+        from: messageData.from, 
+        body: messageData.message
+        }, function(err,response) {
+
+      socket.emit('successfulResponse');
+      console.log('Responder Message Delivered');
+    });   
+  })
+
   //if a user searches by keyword
   socket.on('keyWordSearch', function(keyword){
     SMS.find({Searchable: keyword}, function(err, matchingResponses){
@@ -185,11 +200,5 @@ io.sockets.on('connection', function(socket){
 
 // will return true if the number is not known
 function checkNumber(value) {
-  var newNum = false;
-
-  if (value === -1) {
-    newNum = true;
-  }
-
-  return newNum;
+  return value === -1;
 }
