@@ -126,7 +126,7 @@ function createTextDiv(text) {
 	//maybe we dont need to show DB Id
 	var dbIDdiv = '<div class="fromDiv">Database ID: ' + id +'</div>';
 
-	var allContentDivs = fromDiv + dateDiv +responderDiv + responseDiv + textContentDiv +fullfilledDiv;
+	var allContentDivs = fromDiv + dateDiv +textContentDiv  + responseDiv + responderDiv + fullfilledDiv;
 	var newDiv = '<div class="textbox" id=' + from +'>'+ allContentDivs +'</div>';
 
 	return newDiv;		 
