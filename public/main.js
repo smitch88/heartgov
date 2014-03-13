@@ -1,6 +1,8 @@
 $(window).ready(function() {
 	var socket = io.connect();
 
+	socketObject.init();
+
 	//running a keyword search
 	var searchButton = $('#searchSubmit'),
 		button = $('.button'),
@@ -11,21 +13,21 @@ $(window).ready(function() {
 	//=========================================================================
 
 	//posting the keyword search
-	searchButton.click( function() {
+	searchButton.on('click', function() {
 		var searchValue = $('#search').val();
 
 		socket.emit('keyWordSearch', searchValue);
 	});
 
 	//filter the available texts 
-	button.click( function(e) {
+	button.on('click', function(e) {
 		filterType = e.target.id;
 
 		socket.emit('filterTexts', filterType);
 	});
 
 	//responding to texts via text box
-	sendResponse.click( function() {
+	sendResponse.on('click', function() {
 		var reciever = $('#respondToTexts').val(),
 			message = $('#responseText').val();
 
@@ -62,38 +64,70 @@ $(window).ready(function() {
 	//=========================================================================
 });
 
-function showAllTexts(texts) {
+var socketObject = (function() {
+	//var newSocket = io.connect();
+	
+	var init = function() {
+		getUserClicks();
+	}
+
+	var getUserClicks = function() {
+		return true
+	}
+
+	return {
+		'init': init
+	}
+
+
+})();
+
+function showAllTexts(text) {
 	var textHolder = $('.textwindow');
+	var htmlInsert = "";
 
-	textHolder.empty();
+	for (i=0; i <= text.length-1; i++) {
+		var newDiv = createTextDiv(text[i])
 
-	for (i=0; i <= texts.length-1; i++) {
-		var content = texts[i].Body,
-			from = texts[i].From,
-			response = texts[i].Response,
-			responder = texts[i].Responder,
-			id = texts[i]._id,
-			date = texts[i].date,
-			newDiv = '<div class="textbox" id=' + from +
-					 '>Text from: ' + from + '<br>' + 
-					 'Date Recieved: ' + date + '<br>' + 
-					 'Responder: ' + responder +'<br>' +
-					 'Response Sent: ' + response + '<br>' + 
-					 'Database ID: ' + id +'<br>' + 
-					 'Text Content: ' + content +'<br>' +
-					 'Fullfilled: false'
-					 + '</div>';
-
-		textHolder.append(newDiv)
+		htmlInsert += (newDiv)
 	};
+
+	textHolder.html(htmlInsert)
 
 	//clicking a text to return phone number to responsebox
 	var textbox = $('.textbox');
 
-	textbox.click( function(e) {
+	textbox.on('click', function(e) {
 		var phoneNumber = e.target.id,
 			phoneNumberField = $('#respondToTexts');
 
 			phoneNumberField.val(phoneNumber)
 	})
+}
+
+function createTextDiv(text) {
+
+	//content vars
+	var content = text.Body,
+		from = text.From,
+		response = text.Response,
+		responder = text.Responder,
+		id = text._id,
+		date = text.date;
+
+	//new div vars	
+	var fromDiv = '<div class="fromDiv">Text from:<br><br>' + from + '</div>';
+	var dateDiv = '<div class="fromDiv">Date Recieved:<br><br>' + date + '</div>';
+	var responderDiv = '<div class="fromDiv">Responder:<br><br>' + responder +'</div>';
+	var responseDiv = '<div class="fromDiv">Response Sent:<br><br>' + response + '</div>';
+	var textContentDiv = '<div class="fromDiv">Text Content:<br><br>' + content +'</div>';
+	var fullfilledDiv = '<div class="fromDiv">Fullfilled:<br><br>False</div>';
+
+	//maybe we dont need to show DB Id
+	var dbIDdiv = '<div class="fromDiv">Database ID: ' + id +'</div>';
+
+	var allContentDivs = fromDiv + dateDiv +responderDiv + responseDiv + textContentDiv +fullfilledDiv;
+	var newDiv = '<div class="textbox" id=' + from +'>'+ allContentDivs +'</div>';
+
+	return newDiv;		 
 }
